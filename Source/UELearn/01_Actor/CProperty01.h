@@ -23,4 +23,15 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+protected:
+	UPROPERTY( EditAnywhere )
+		int A = 10;
+	UPROPERTY( EditInstanceOnly )
+		int B = 20;
+	UPROPERTY( EditDefaultsOnly )
+		int C;
+	UPROPERTY( BlueprintReadOnly, VisibleAnywhere )
+		int D = 40;
+
+
 };
