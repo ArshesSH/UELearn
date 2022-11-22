@@ -18,20 +18,20 @@ void ACProperty01::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	FString str;
-	str.Append( "A: " );
-	str.Append( FString::FromInt( A ) );
+	//FString str;
+	//str.Append( "A: " );
+	//str.Append( FString::FromInt( A ) );
 
-	str.Append( ", B: " );
-	str.Append( FString::FromInt( B ) );
+	//str.Append( ", B: " );
+	//str.Append( FString::FromInt( B ) );
 
-	str.Append( ", C: " );
-	str.Append( FString::FromInt( C ) );
+	//str.Append( ", C: " );
+	//str.Append( FString::FromInt( C ) );
 
-	str.Append( ", D: " );
-	str.Append( FString::FromInt( D ) );
+	//str.Append( ", D: " );
+	//str.Append( FString::FromInt( D ) );
 
-	GLog->Log( str );
+	//GLog->Log( str );
 
 }
 
