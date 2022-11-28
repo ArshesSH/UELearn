@@ -6,12 +6,11 @@
 #include "GameFramework/GameModeBase.h"
 #include "UELearnGameModeBase.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class UELEARN_API AUELearnGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+public:
+	AUELearnGameModeBase();
 };
