@@ -21,9 +21,18 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
+	void OnMoveForward( float axis );
+	void OnMoveRight( float axis );
+	void OnHorizontalLook( float axis );
+	void OnVerticalLook( float axis );
+	void OnRunning();
+	void OffRuning();
+
+private:
 	UPROPERTY( VisibleDefaultsOnly )
 	class USpringArmComponent* SpringArm;
 	UPROPERTY( VisibleDefaultsOnly )
 	class UCameraComponent* Camera;
-
+	UPROPERTY( EditAnywhere )
+	bool bInverseVerticalCamera = false;
 };
