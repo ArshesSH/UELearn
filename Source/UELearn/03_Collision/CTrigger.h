@@ -2,15 +2,18 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "CActorOverlap.generated.h"
+#include "CTrigger.generated.h"
+
+DECLARE_DELEGATE( FBoxLightBeginOverlap );
+DECLARE_DELEGATE( FBoxLightEndOverlap );
 
 UCLASS()
-class UELEARN_API ACActorOverlap : public AActor
+class UELEARN_API ACTrigger : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
-	ACActorOverlap();
+	ACTrigger();
 
 protected:
 	virtual void BeginPlay() override;
@@ -29,5 +32,7 @@ private:
 	UPROPERTY( VisibleDefaultsOnly )
 		class UTextRenderComponent* Text;
 
-
+public:
+	FBoxLightBeginOverlap OnBoxLightBeginOverlap;
+	FBoxLightEndOverlap OnBoxLightEndOverlap;
 };

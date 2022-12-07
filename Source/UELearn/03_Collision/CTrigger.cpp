@@ -1,9 +1,9 @@
-#include "CActorOverlap.h"
+#include "CTrigger.h"
 #include "Global.h"
 #include "Components/BoxComponent.h"
 #include "Components/TextRenderComponent.h"
 
-ACActorOverlap::ACActorOverlap()
+ACTrigger::ACTrigger()
 {
 	CHelpers::CreateComponent<USceneComponent>( this, &Scene, "Scene" );
 	CHelpers::CreateComponent<UBoxComponent>( this, &Box, "Box", Scene );
@@ -18,30 +18,32 @@ ACActorOverlap::ACActorOverlap()
 	Text->TextRenderColor = FColor::Red;
 	Text->HorizontalAlignment = EHorizTextAligment::EHTA_Center;
 	Text->Text = FText::FromString( GetName() );
+
 }
 
-void ACActorOverlap::BeginPlay()
+void ACTrigger::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	OnActorBeginOverlap.AddDynamic( this, &ACActorOverlap::ActorBeginOverlap );
-	OnActorEndOverlap.AddDynamic( this, &ACActorOverlap::ActorEndOverlap );
+
+	OnActorBeginOverlap.AddDynamic( this, &ACTrigger::ActorBeginOverlap );
+	OnActorEndOverlap.AddDynamic( this, &ACTrigger::ActorEndOverlap );
 }
 
-void ACActorOverlap::ActorBeginOverlap( AActor* OverlappedActor, AActor* otherActor )
+void ACTrigger::ActorBeginOverlap( AActor* OverlappedActor, AActor* otherActor )
 {
-	FString str = "";
-	str.Append( otherActor->GetName() );
-	CLog::Log( str );
-	CLog::Print( str );
+	// 충돌 시 Delegate에 연결 된 함수가 있으면,
+	if ( OnBoxLightBeginOverlap.IsBound() )
+	{
+		// 연결 된 함수 실행
+		OnBoxLightBeginOverlap.Execute();
+	}
 }
-void ACActorOverlap::ActorEndOverlap( AActor* OverlappedActor, AActor* otherActor )
-{
-	FString str = "";
-	str.Append( "__FUNCTION__" );
-	str.Append( " : " );
 
-	str.Append( otherActor->GetName() );
-	CLog::Log( str );
-	CLog::Print( str );
+void ACTrigger::ActorEndOverlap( AActor* OverlappedActor, AActor* otherActor )
+{
+	if ( OnBoxLightEndOverlap.IsBound() )
+	{
+		OnBoxLightEndOverlap.Execute();
+	}
 }
+

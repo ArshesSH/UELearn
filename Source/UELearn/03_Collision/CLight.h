@@ -2,32 +2,31 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "CActorOverlap.generated.h"
+#include "CLight.generated.h"
 
 UCLASS()
-class UELEARN_API ACActorOverlap : public AActor
+class UELEARN_API ACLight : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
-	ACActorOverlap();
+	ACLight();
 
 protected:
 	virtual void BeginPlay() override;
 
 private:
 	UFUNCTION()
-		void ActorBeginOverlap( AActor* OverlappedActor, AActor* otherActor );
+		void OnLight();
 	UFUNCTION()
-		void ActorEndOverlap( AActor* OverlappedActor, AActor* otherActor );
+		void OffLight();
 
 private:
 	UPROPERTY( VisibleDefaultsOnly )
 		class USceneComponent* Scene;
 	UPROPERTY( VisibleDefaultsOnly )
-		class UBoxComponent* Box;
-	UPROPERTY( VisibleDefaultsOnly )
 		class UTextRenderComponent* Text;
-
+	UPROPERTY( VisibleDefaultsOnly )
+		class UPointLightComponent* PointLight;
 
 };
