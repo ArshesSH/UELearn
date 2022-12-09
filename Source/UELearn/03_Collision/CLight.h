@@ -20,6 +20,8 @@ private:
 		void OnLight();
 	UFUNCTION()
 		void OffLight();
+	UFUNCTION()
+		FString OnRandomLight( FLinearColor inColor );
 
 private:
 	UPROPERTY( VisibleDefaultsOnly )
@@ -28,5 +30,7 @@ private:
 		class UTextRenderComponent* Text;
 	UPROPERTY( VisibleDefaultsOnly )
 		class UPointLightComponent* PointLight;
+	UPROPERTY( VisibleDefaultsOnly )
+		class UPointLightComponent* PointLight2;
 
 };

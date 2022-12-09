@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Engine/World.h"
 
 class UELEARN_API CHelpers
 {
@@ -37,5 +38,18 @@ public:
 		ConstructorHelpers::FClassFinder<T> asset( *inPath );
 		verifyf( asset.Succeeded(), L"asset.Succeeded()" );
 		*outClass = asset.Class;
+	}
+	// World 에서 액터 검색
+	template<typename T> static void FindActors( class UWorld* inWorld, TArray<T*>& outActors )
+	{
+		outActors.Empty();
+
+		TArray<AActor*> actors;
+		UGameplayStatics::GetAllActorsOfClass( inWorld, T::StaticClass(), actors );
+		//for ( const auto& actor : actors )
+		for(AActor* actor: actors )
+		{
+			outActors.Add( Cast<T>( actor ) );
+		}
 	}
 };

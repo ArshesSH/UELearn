@@ -1,9 +1,9 @@
-#include "CTrigger.h"
+#include "CMultiCastTrigger.h"
 #include "Global.h"
 #include "Components/BoxComponent.h"
 #include "Components/TextRenderComponent.h"
 
-ACTrigger::ACTrigger()
+ACMultiCastTrigger::ACMultiCastTrigger()
 {
 	CHelpers::CreateComponent<USceneComponent>( this, &Scene, "Scene" );
 	CHelpers::CreateComponent<UBoxComponent>( this, &Box, "Box", Scene );
@@ -18,43 +18,35 @@ ACTrigger::ACTrigger()
 	Text->TextRenderColor = FColor::Red;
 	Text->HorizontalAlignment = EHorizTextAligment::EHTA_Center;
 	Text->Text = FText::FromString( GetName() );
-
 }
 
-void ACTrigger::BeginPlay()
+void ACMultiCastTrigger::BeginPlay()
 {
 	Super::BeginPlay();
 
-	OnActorBeginOverlap.AddDynamic( this, &ACTrigger::ActorBeginOverlap );
-	OnActorEndOverlap.AddDynamic( this, &ACTrigger::ActorEndOverlap );
+	OnActorBeginOverlap.AddDynamic( this, &ACMultiCastTrigger::ActorBeginOverlap );
+	OnActorEndOverlap.AddDynamic( this, &ACMultiCastTrigger::ActorEndOverlap );
+	
 }
 
-void ACTrigger::ActorBeginOverlap( AActor* OverlappedActor, AActor* otherActor )
+void ACMultiCastTrigger::ActorBeginOverlap( AActor* OverlappedActor, AActor* otherActor )
 {
-	// 충돌 시 Delegate에 연결 된 함수가 있으면,
-	if ( OnBoxLightBeginOverlap.IsBound() )
+	if ( OnMultiLightBeginOverlap.IsBound() )
 	{
-		// 연결 된 함수 실행
-		OnBoxLightBeginOverlap.Execute();
-	}
-	if ( OnBoxLightRandomBeginOverlap.IsBound() )
-	{
+		// unreal random은 max 포함
+		int32 index = UKismetMathLibrary::RandomIntegerInRange( 0, 2 );
 		FLinearColor color;
 		color.R = UKismetMathLibrary::RandomFloatInRange( 0, 1 );
 		color.G = UKismetMathLibrary::RandomFloatInRange( 0, 1 );
 		color.B = UKismetMathLibrary::RandomFloatInRange( 0, 1 );
 		color.A = 1.0f;
 
-		FString str = OnBoxLightRandomBeginOverlap.Execute( color );
-		CLog::Log( str );
+		// Multi는 execute 대신 broadcast 사용
+		OnMultiLightBeginOverlap.Broadcast(index, color);
 	}
 }
 
-void ACTrigger::ActorEndOverlap( AActor* OverlappedActor, AActor* otherActor )
+void ACMultiCastTrigger::ActorEndOverlap( AActor* OverlappedActor, AActor* otherActor )
 {
-	if ( OnBoxLightEndOverlap.IsBound() )
-	{
-		OnBoxLightEndOverlap.Execute();
-	}
 }
 

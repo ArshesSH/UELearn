@@ -9,6 +9,7 @@ ACLight::ACLight()
 	CHelpers::CreateComponent<USceneComponent>( this, &Scene, "Scene" );
 	CHelpers::CreateComponent<UTextRenderComponent>( this, &Text, "Text", Scene );
 	CHelpers::CreateComponent<UPointLightComponent>( this, &PointLight, "PointLight", Scene );
+	CHelpers::CreateComponent<UPointLightComponent>( this, &PointLight2, "PointLight2", Scene );
 
 	Text->SetRelativeLocation( FVector( 0, 0, 100 ) );
 	Text->SetRelativeRotation( FRotator( 0, 180, 0 ) );
@@ -20,6 +21,11 @@ ACLight::ACLight()
 	PointLight->Intensity = 1e+4f;
 	PointLight->AttenuationRadius = 200;	// 감쇠 범위
 	PointLight->LightColor = FColor( 255, 128, 5 );
+
+	PointLight2->SetRelativeLocation( FVector( 0, 400, 0 ) );
+	PointLight2->Intensity = 1e+4f;
+	PointLight2->AttenuationRadius = 200;
+	PointLight2->LightColor = FColor( 255, 255, 0 );
 }
 
 void ACLight::BeginPlay()
@@ -27,6 +33,7 @@ void ACLight::BeginPlay()
 	Super::BeginPlay();
 
 	PointLight->SetVisibility( false );
+	PointLight2->SetVisibility( false );
 
 	// T SubClass들은 StaticClass를 상속받는 클래스
 	TArray<AActor*> actors;
@@ -35,6 +42,8 @@ void ACLight::BeginPlay()
 	ACTrigger* trigger = Cast<ACTrigger>( actors[0] );
 	trigger->OnBoxLightBeginOverlap.BindUFunction( this, "OnLight" );
 	trigger->OnBoxLightEndOverlap.BindUFunction( this, "OffLight" );
+
+	trigger->OnBoxLightRandomBeginOverlap.BindUFunction( this, "OnRandomLight" );
 }
 
 void ACLight::OnLight()
@@ -45,5 +54,13 @@ void ACLight::OnLight()
 void ACLight::OffLight()
 {
 	PointLight->SetVisibility( false );
+	PointLight2->SetVisibility( false );
+}
+
+FString ACLight::OnRandomLight( FLinearColor inColor )
+{
+	PointLight2->SetVisibility( true );
+	PointLight2->SetLightColor( inColor );
+	return inColor.ToString();
 }
 

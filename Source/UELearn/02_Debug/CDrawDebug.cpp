@@ -35,7 +35,7 @@ void ACDrawDebug::Tick(float DeltaTime)
 		location[i] = initLocation[i] + GetActorLocation();
 	}
 
-	DrawDebugSolidBox( GetWorld(), location[0] + box.GetCenter(), box.GetExtent(), FColor::Red, true );
+	DrawDebugSolidBox( GetWorld(), location[0] + box.GetCenter(), box.GetExtent(), FColor::Red);
 	DrawDebugPoint( GetWorld(), location[1], 100, FColor::Red );
 	DrawDebugSphere( GetWorld(), location[2], 100, 50, FColor::Green );
 	DrawDebugCircle( GetWorld(), location[3], 100, 60, FColor::Blue );

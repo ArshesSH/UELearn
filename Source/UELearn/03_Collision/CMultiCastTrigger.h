@@ -2,23 +2,24 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "CTrigger.generated.h"
+#include "CMultiCastTrigger.generated.h"
 
-DECLARE_DELEGATE( FBoxLightBeginOverlap );
-DECLARE_DELEGATE( FBoxLightEndOverlap );
-DECLARE_DELEGATE_RetVal_OneParam( FString, FBoxLightRandomBeginOverlap, FLinearColor );
+// 멀티캐스트 델리게이트 생성
+DECLARE_MULTICAST_DELEGATE_TwoParams( FMultiLightBeginOverlap, int32, FLinearColor )
 
 UCLASS()
-class UELEARN_API ACTrigger : public AActor
+class UELEARN_API ACMultiCastTrigger : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
-	ACTrigger();
+	ACMultiCastTrigger();
 
 protected:
 	virtual void BeginPlay() override;
 
+public:
+	FMultiLightBeginOverlap OnMultiLightBeginOverlap;
 private:
 	UFUNCTION()
 		void ActorBeginOverlap( AActor* OverlappedActor, AActor* otherActor );
@@ -32,9 +33,4 @@ private:
 		class UBoxComponent* Box;
 	UPROPERTY( VisibleDefaultsOnly )
 		class UTextRenderComponent* Text;
-
-public:
-	FBoxLightBeginOverlap OnBoxLightBeginOverlap;
-	FBoxLightEndOverlap OnBoxLightEndOverlap;
-	FBoxLightRandomBeginOverlap OnBoxLightRandomBeginOverlap;
 };
