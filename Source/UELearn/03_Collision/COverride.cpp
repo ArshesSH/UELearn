@@ -1,9 +1,11 @@
-#include "CActorOverlap.h"
+#include "COverride.h"
+
 #include "Global.h"
 #include "Components/BoxComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "CPlayer.h"
 
-ACActorOverlap::ACActorOverlap()
+ACOverride::ACOverride()
 {
 	CHelpers::CreateComponent<USceneComponent>( this, &Scene, "Scene" );
 	CHelpers::CreateComponent<UBoxComponent>( this, &Box, "Box", Scene );
@@ -20,28 +22,28 @@ ACActorOverlap::ACActorOverlap()
 	Text->Text = FText::FromString( GetName() );
 }
 
-void ACActorOverlap::BeginPlay()
+void ACOverride::BeginPlay()
 {
 	Super::BeginPlay();
+
+	OnActorBeginOverlap.AddDynamic( this, &ACOverride::ActorBeginOverlap );
+	OnActorEndOverlap.AddDynamic( this, &ACOverride::ActorEndOverlap );
 	
-	OnActorBeginOverlap.AddDynamic( this, &ACActorOverlap::ActorBeginOverlap );
-	OnActorEndOverlap.AddDynamic( this, &ACActorOverlap::ActorEndOverlap );
 }
 
-void ACActorOverlap::ActorBeginOverlap( AActor* OverlappedActor, AActor* otherActor )
+void ACOverride::ChangeColorWhite_Implementation()
 {
-	FString str = "";
-	str.Append( otherActor->GetName() );	
-	CLog::Log( str );
-	CLog::Print( str );
+	ACPlayer* player = Cast<ACPlayer>( UGameplayStatics::GetPlayerCharacter( GetWorld(), 0 ) );
+	player->ChangeColor( FLinearColor(0,0,1) );
 }
-void ACActorOverlap::ActorEndOverlap( AActor* OverlappedActor, AActor* otherActor )
-{
-	FString str = "";
-	str.Append( "__FUNCTION__" );
-	str.Append( " : " );
 
-	str.Append( otherActor->GetName() );
-	CLog::Log( str );
-	CLog::Print( str );
+void ACOverride::ActorBeginOverlap( AActor* OverlappedActor, AActor* otherActor )
+{
+	ChangeColorRed();
 }
+
+void ACOverride::ActorEndOverlap( AActor* OverlappedActor, AActor* otherActor )
+{
+	ChangeColorWhite();
+}
+

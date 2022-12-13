@@ -6,6 +6,9 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 
+#include "Materials/MaterialInstanceConstant.h"
+#include "Materials/MaterialInstanceDynamic.h"
+
 ACPlayer::ACPlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -54,6 +57,20 @@ void ACPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	UMaterialInstanceConstant* bodyMaterial;
+	CHelpers::GetAssetDynamic<UMaterialInstanceConstant>( &bodyMaterial,
+		"MaterialInstanceConstant'/Game/Materials/M_UE4Man_Body_Inst.M_UE4Man_Body_Inst'" );
+	BodyMaterial = UMaterialInstanceDynamic::Create( bodyMaterial, this );
+
+
+	UMaterialInstanceConstant* logoMaterial;
+	CHelpers::GetAssetDynamic<UMaterialInstanceConstant>( &logoMaterial,
+		"MaterialInstanceConstant'/Game/Materials/M_UE4Man_ChestLogo_Inst.M_UE4Man_ChestLogo_Inst'" );
+	LogoMaterial = UMaterialInstanceDynamic::Create( logoMaterial, this );
+
+	GetMesh()->SetMaterial( 0, BodyMaterial );
+	GetMesh()->SetMaterial( 1, LogoMaterial );
+
 }
 
 void ACPlayer::Tick(float DeltaTime)
@@ -72,6 +89,12 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis( "VerticalLook", this, &ACPlayer::OnVerticalLook );
 	PlayerInputComponent->BindAction( "Running", EInputEvent::IE_Pressed, this, &ACPlayer::OnRunning );
 	PlayerInputComponent->BindAction( "Running", EInputEvent::IE_Released, this, &ACPlayer::OffRuning );
+}
+
+void ACPlayer::ChangeColor( FLinearColor inColor )
+{
+	BodyMaterial->SetVectorParameterValue( "BodyColor", inColor );
+	LogoMaterial->SetVectorParameterValue( "BodyColor", inColor );
 }
 
 void ACPlayer::OnMoveForward( float axis )

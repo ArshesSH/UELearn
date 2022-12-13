@@ -20,6 +20,10 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+public:
+	UFUNCTION( BlueprintCallable )
+		void ChangeColor( FLinearColor inColor );
+
 private:
 	void OnMoveForward( float axis );
 	void OnMoveRight( float axis );
@@ -35,4 +39,8 @@ private:
 	class UCameraComponent* Camera;
 	UPROPERTY( EditAnywhere )
 	bool bInverseVerticalCamera = false;
+
+
+	class UMaterialInstanceDynamic* BodyMaterial;
+	class UMaterialInstanceDynamic* LogoMaterial;
 };
