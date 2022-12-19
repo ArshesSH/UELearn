@@ -9,11 +9,14 @@
 #include "Materials/MaterialInstanceConstant.h"
 #include "Materials/MaterialInstanceDynamic.h"
 
+// 22.12.16 added for rifle
+#include "CRifle.h"
+
 ACPlayer::ACPlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	/*
+	/*  
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>( "SpringArm" );
 	SpringArm->SetupAttachment( GetCapsuleComponent() );
 
@@ -49,7 +52,8 @@ ACPlayer::ACPlayer()
 	SpringArm->bDoCollisionTest = false; //스프링 암 중간에 충돌 테스트 끄기
 	SpringArm->bUsePawnControlRotation = true;
 
-
+	//22.12.19 add
+	SpringArm->SocketOffset = FVector( 0, 60, 0 );
 
 }
 
@@ -71,12 +75,13 @@ void ACPlayer::BeginPlay()
 	GetMesh()->SetMaterial( 0, BodyMaterial );
 	GetMesh()->SetMaterial( 1, LogoMaterial );
 
+	// 22.12.16 added
+	Rifle = ACRifle::Spawn( GetWorld(), this );
 }
 
 void ACPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -89,6 +94,9 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis( "VerticalLook", this, &ACPlayer::OnVerticalLook );
 	PlayerInputComponent->BindAction( "Running", EInputEvent::IE_Pressed, this, &ACPlayer::OnRunning );
 	PlayerInputComponent->BindAction( "Running", EInputEvent::IE_Released, this, &ACPlayer::OffRuning );
+	PlayerInputComponent->BindAction( "Rifle", EInputEvent::IE_Pressed, this, &ACPlayer::OnRifle );
+	PlayerInputComponent->BindAction( "Aim", EInputEvent::IE_Pressed, this, &ACPlayer::OnAim );
+	PlayerInputComponent->BindAction( "Aim", EInputEvent::IE_Released, this, &ACPlayer::OffAim );
 }
 
 void ACPlayer::ChangeColor( FLinearColor inColor )
@@ -129,4 +137,48 @@ void ACPlayer::OnRunning()
 void ACPlayer::OffRuning()
 {
 	GetCharacterMovement()->MaxWalkSpeed = 400.0f;
+}
+
+void ACPlayer::OnRifle()
+{
+	CLog::Log( Rifle->GetEquipped() );
+	CLog::Log( Rifle->GetEquipping() );
+
+	if ( Rifle->GetEquipped() )
+	{
+		Rifle->Unequip();
+		CLog::Log( Rifle->GetEquipped() );
+		CLog::Log( Rifle->GetEquipping() );
+		return;
+	}
+	Rifle->Equip();
+
+	CLog::Log( Rifle->GetEquipped() );
+	CLog::Log( Rifle->GetEquipping() );
+}
+
+void ACPlayer::OnAim()
+{
+	CheckFalse( Rifle->GetEquipped() );
+	CheckTrue( Rifle->GetEquipping() );
+
+	bUseControllerRotationYaw = true;
+	GetCharacterMovement()->bOrientRotationToMovement = false;
+	
+	SpringArm->TargetArmLength = 100;
+	SpringArm->SocketOffset = FVector( 0, 30, 10 );
+	Camera->FieldOfView = 45;
+}
+
+void ACPlayer::OffAim()
+{
+	CheckFalse( Rifle->GetEquipped() );
+	CheckTrue( Rifle->GetEquipping() );
+
+	bUseControllerRotationYaw = false;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+
+	SpringArm->TargetArmLength = 200;
+	SpringArm->SocketOffset = FVector( 0, 0, 0 );
+	Camera->FieldOfView = 90;
 }

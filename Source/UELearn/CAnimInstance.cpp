@@ -5,6 +5,9 @@
 #include "Global.h"
 #include "GameFramework/Character.h"
 
+#include "IRifle.h"
+#include "CRifle.h"
+
 void UCAnimInstance::NativeBeginPlay()
 {
     Super::NativeBeginPlay();
@@ -19,4 +22,12 @@ void UCAnimInstance::NativeUpdateAnimation( float DeltaSeconds )
     CheckNull( OwnerCharacter );
 
     speed = OwnerCharacter->GetVelocity().Size2D();
+
+
+    //22.12.19 added
+    IIRifle* rifle = Cast<IIRifle>( OwnerCharacter );
+    if ( !!rifle )
+    {
+        bEquipped = rifle->GetRifle()->GetEquipped();
+    }
 }

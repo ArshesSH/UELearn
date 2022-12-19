@@ -2,10 +2,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "IRifle.h"
 #include "CPlayer.generated.h"
 
 UCLASS()
-class UELEARN_API ACPlayer : public ACharacter
+class UELEARN_API ACPlayer : public ACharacter, public IIRifle
 {
 	GENERATED_BODY()
 
@@ -24,6 +25,8 @@ public:
 	UFUNCTION( BlueprintCallable )
 		void ChangeColor( FLinearColor inColor );
 
+	FORCEINLINE class ACRifle* GetRifle() override { return Rifle; }
+
 private:
 	void OnMoveForward( float axis );
 	void OnMoveRight( float axis );
@@ -31,7 +34,9 @@ private:
 	void OnVerticalLook( float axis );
 	void OnRunning();
 	void OffRuning();
-
+	void OnRifle();
+	void OnAim();
+	void OffAim();
 private:
 	UPROPERTY( VisibleDefaultsOnly )
 	class USpringArmComponent* SpringArm;
@@ -40,7 +45,9 @@ private:
 	UPROPERTY( EditAnywhere )
 	bool bInverseVerticalCamera = false;
 
-
 	class UMaterialInstanceDynamic* BodyMaterial;
 	class UMaterialInstanceDynamic* LogoMaterial;
+
+	//  22.12.16 added for rifle
+	class ACRifle* Rifle;
 };
