@@ -27,6 +27,12 @@ public:
 
 	FORCEINLINE class ACRifle* GetRifle() override { return Rifle; }
 
+protected:
+	UFUNCTION( BlueprintImplementableEvent )
+		void OnZoomIn();
+	UFUNCTION( BlueprintImplementableEvent )
+		void OnZoomOut();
+
 private:
 	void OnMoveForward( float axis );
 	void OnMoveRight( float axis );
@@ -37,11 +43,14 @@ private:
 	void OnRifle();
 	void OnAim();
 	void OffAim();
+
+protected:
+	UPROPERTY( BlueprintReadOnly, VisibleDefaultsOnly )
+		class USpringArmComponent* SpringArm;
+	UPROPERTY( BlueprintReadOnly, VisibleDefaultsOnly )
+		class UCameraComponent* Camera;
+
 private:
-	UPROPERTY( VisibleDefaultsOnly )
-	class USpringArmComponent* SpringArm;
-	UPROPERTY( VisibleDefaultsOnly )
-	class UCameraComponent* Camera;
 	UPROPERTY( EditAnywhere )
 	bool bInverseVerticalCamera = false;
 

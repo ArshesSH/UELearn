@@ -20,6 +20,7 @@ public:
 
 	FORCEINLINE bool GetEquipped() { return bEquipped; }
 	FORCEINLINE bool GetEquipping() { return bEquipping; }
+	FORCEINLINE bool GetAiming() { return bAiming; }
 	
 	void Equip();
 	void Begin_Equip();
@@ -28,6 +29,9 @@ public:
 	void Unequip();
 	void Begin_Unequip();
 	void End_Unequip();
+
+	void Begin_Aiming();
+	void End_Aiming();
 	
 
 private:
@@ -45,6 +49,8 @@ private:
 		class UAnimMontage* UnGrabMontage;
 
 	class  ACharacter* OwnerCharacter;
+
 	bool bEquipped;
 	bool bEquipping;
+	bool bAiming;
 };

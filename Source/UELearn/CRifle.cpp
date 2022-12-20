@@ -73,3 +73,13 @@ void ACRifle::End_Unequip()
 {
 	bEquipping = false;
 }
+
+void ACRifle::Begin_Aiming()
+{
+	bAiming = true;
+}
+
+void ACRifle::End_Aiming()
+{
+	bAiming = false;
+}

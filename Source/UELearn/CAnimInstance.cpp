@@ -22,12 +22,14 @@ void UCAnimInstance::NativeUpdateAnimation( float DeltaSeconds )
     CheckNull( OwnerCharacter );
 
     speed = OwnerCharacter->GetVelocity().Size2D();
-
+    direction = CalculateDirection( OwnerCharacter->GetVelocity(), OwnerCharacter->GetControlRotation() );
+    pitch = OwnerCharacter->GetBaseAimRotation().Pitch;
 
     //22.12.19 added
     IIRifle* rifle = Cast<IIRifle>( OwnerCharacter );
     if ( !!rifle )
     {
         bEquipped = rifle->GetRifle()->GetEquipped();
+        bAiming = rifle->GetRifle()->GetAiming();
     }
 }

@@ -167,7 +167,10 @@ void ACPlayer::OnAim()
 	
 	SpringArm->TargetArmLength = 100;
 	SpringArm->SocketOffset = FVector( 0, 30, 10 );
-	Camera->FieldOfView = 45;
+	//Camera->FieldOfView = 45;
+
+	OnZoomIn();
+	Rifle->Begin_Aiming();
 }
 
 void ACPlayer::OffAim()
@@ -180,5 +183,8 @@ void ACPlayer::OffAim()
 
 	SpringArm->TargetArmLength = 200;
 	SpringArm->SocketOffset = FVector( 0, 0, 0 );
-	Camera->FieldOfView = 90;
+	//Camera->FieldOfView = 90;
+
+	OnZoomOut();
+	Rifle->End_Aiming();
 }
