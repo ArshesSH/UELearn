@@ -26,6 +26,11 @@ public:
 		void ChangeColor( FLinearColor inColor );
 
 	FORCEINLINE class ACRifle* GetRifle() override { return Rifle; }
+	void GetLocationAndDirection( FVector& outStart, FVector& outEnd, FVector& outDirection ) override;
+
+	void OnFocus() override;
+	void OffFocus() override;
+
 
 protected:
 	UFUNCTION( BlueprintImplementableEvent )
@@ -43,6 +48,8 @@ private:
 	void OnRifle();
 	void OnAim();
 	void OffAim();
+	void OnFire();
+	void OffFire();
 
 protected:
 	UPROPERTY( BlueprintReadOnly, VisibleDefaultsOnly )
@@ -59,4 +66,9 @@ private:
 
 	//  22.12.16 added for rifle
 	class ACRifle* Rifle;
+
+	// 22.12.21 added for crossHair
+	UPROPERTY( EditDefaultsOnly, Category = "Widget" )
+		TSubclassOf<class UCUserWidget_CrossHair> crossHairClass;
+	class UCUserWidget_CrossHair* crossHair;
 };

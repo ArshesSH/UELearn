@@ -14,6 +14,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void Tick( float DeltaTime ) override;
 
 public:
 	static ACRifle* Spawn( class UWorld* inWorld, class ACharacter* inOwner );
@@ -33,6 +34,9 @@ public:
 	void Begin_Aiming();
 	void End_Aiming();
 	
+	void Begin_Fire();
+	void Firing();
+	void End_Fire();
 
 private:
 	UPROPERTY( VisibleDefaultsOnly, Category = "Rifle" )
@@ -53,4 +57,5 @@ private:
 	bool bEquipped;
 	bool bEquipping;
 	bool bAiming;
+	bool bFiring;
 };
