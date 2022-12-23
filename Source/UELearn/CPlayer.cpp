@@ -5,6 +5,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Camera/CameraShake.h"
 
 #include "Materials/MaterialInstanceConstant.h"
 #include "Materials/MaterialInstanceDynamic.h"
@@ -60,6 +61,8 @@ ACPlayer::ACPlayer()
 	// blueprint 레퍼런스이니 _C를 뒤에 붙여야함
 	CHelpers::GetClass<UCUserWidget_CrossHair>( &crossHairClass, "WidgetBlueprint'/Game/Widgets/WB_CrossHair.WB_CrossHair_C'" );
 
+	// 22.12.23 added 
+	CHelpers::GetClass<UCameraShake>( &CameraShakeClass, "Blueprint'/Game/BP_CameraShake.BP_CameraShake_C'" );
 }
 
 void ACPlayer::BeginPlay()
@@ -234,4 +237,9 @@ void ACPlayer::OnFire()
 void ACPlayer::OffFire()
 {
 	Rifle->End_Fire();
+}
+
+void ACPlayer::PlayCameraShake()
+{
+	GetController<APlayerController>()->PlayerCameraManager->PlayCameraShake( CameraShakeClass );
 }

@@ -38,6 +38,9 @@ protected:
 	UFUNCTION( BlueprintImplementableEvent )
 		void OnZoomOut();
 
+public:
+	void PlayCameraShake();
+
 private:
 	void OnMoveForward( float axis );
 	void OnMoveRight( float axis );
@@ -71,4 +74,8 @@ private:
 	UPROPERTY( EditDefaultsOnly, Category = "Widget" )
 		TSubclassOf<class UCUserWidget_CrossHair> crossHairClass;
 	class UCUserWidget_CrossHair* crossHair;
+
+	// 22.12.23 added
+	UPROPERTY( EditDefaultsOnly, Category = "Camera" )
+		TSubclassOf<class UCameraShake> CameraShakeClass;
 };

@@ -51,6 +51,17 @@ private:
 		class UAnimMontage* GrabMontage;
 	UPROPERTY( VisibleDefaultsOnly, Category = "Rifle" )
 		class UAnimMontage* UnGrabMontage;
+	UPROPERTY( VisibleDefaultsOnly, Category = "Rifle" )
+		class UAnimMontage* FireMontage;
+
+
+	UPROPERTY( VisibleDefaultsOnly, Category = "Rifle" )
+		class UParticleSystem* FlashParticle;
+	UPROPERTY( VisibleDefaultsOnly, Category = "Rifle" )
+		class UParticleSystem* EjectParticle;
+	UPROPERTY( VisibleDefaultsOnly, Category = "Rifle" )
+		class USoundCue* FireSoundCue;
+
 
 	class  ACharacter* OwnerCharacter;
 

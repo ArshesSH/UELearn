@@ -6,6 +6,8 @@
 #include "CPlayer.h"
 #include "Animation/AnimMontage.h"
 #include "Engine/StaticMeshActor.h"
+#include "Particles/ParticleSystem.h"
+#include "Sound/SoundCue.h"
 
 ACRifle::ACRifle()
 {
@@ -18,6 +20,11 @@ ACRifle::ACRifle()
 
 	CHelpers::GetAsset<UAnimMontage>( &GrabMontage, "AnimMontage'/Game/Character/Montages/Rifle_Grab_Montage.Rifle_Grab_Montage'" );
 	CHelpers::GetAsset<UAnimMontage>( &UnGrabMontage, "AnimMontage'/Game/Character/Montages/Rifle_UnGrab_Montage.Rifle_UnGrab_Montage'" );
+	CHelpers::GetAsset<UAnimMontage>( &FireMontage, "AnimMontage'/Game/Character/Montages/Rifle_Fire_Montage.Rifle_Fire_Montage'" );
+	
+	CHelpers::GetAsset<UParticleSystem>( &FlashParticle, "ParticleSystem'/Game/Particles_Rifle/Particles/VFX_Muzzleflash.VFX_Muzzleflash'" );
+	CHelpers::GetAsset<UParticleSystem>( &EjectParticle, "ParticleSystem'/Game/Particles_Rifle/Particles/VFX_Eject_bullet.VFX_Eject_bullet'" );
+	CHelpers::GetAsset<USoundCue>( &FireSoundCue, "SoundCue'/Game/Rifle_Sounds/S_RifleShoot_Cue.S_RifleShoot_Cue'" );
 }
 
 void ACRifle::BeginPlay()
@@ -146,6 +153,23 @@ void ACRifle::Firing()
 
 	FVector start, end, direction;
 	rifle->GetLocationAndDirection( start, end, direction );
+
+	//OwnerCharacter->PlayAnimMontage( FireMontage );
+	ACPlayer* player = Cast<ACPlayer>( OwnerCharacter );
+	if ( !!player )
+	{
+		player->PlayCameraShake();
+	}
+
+	UGameplayStatics::SpawnEmitterAttached( FlashParticle, Mesh, "MuzzleFlash",
+		FVector::ZeroVector, FRotator::ZeroRotator,
+		EAttachLocation::KeepRelativeOffset );
+	UGameplayStatics::SpawnEmitterAttached( EjectParticle, Mesh, "EjectBullet",
+		FVector::ZeroVector, FRotator::ZeroRotator,
+		EAttachLocation::KeepRelativeOffset );
+	FVector muzzleLocation = Mesh->GetSocketLocation( "MuzzleFlash" );
+	UGameplayStatics::PlaySoundAtLocation( GetWorld(), FireSoundCue, muzzleLocation );
+
 
 	FCollisionQueryParams params;
 	params.AddIgnoredActor( this );
