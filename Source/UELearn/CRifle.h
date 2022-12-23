@@ -61,6 +61,10 @@ private:
 		class UParticleSystem* EjectParticle;
 	UPROPERTY( VisibleDefaultsOnly, Category = "Rifle" )
 		class USoundCue* FireSoundCue;
+	UPROPERTY( VisibleDefaultsOnly, Category = "Rifle" )
+		class TSubclassOf<class ACBullet> BulletClass;
+	UPROPERTY( VisibleDefaultsOnly, Category = "Rifle" )
+		class UParticleSystem* ImpactParticle;
 
 
 	class  ACharacter* OwnerCharacter;

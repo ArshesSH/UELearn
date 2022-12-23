@@ -8,6 +8,7 @@
 #include "Engine/StaticMeshActor.h"
 #include "Particles/ParticleSystem.h"
 #include "Sound/SoundCue.h"
+#include "CBullet.h"
 
 ACRifle::ACRifle()
 {
@@ -24,7 +25,9 @@ ACRifle::ACRifle()
 	
 	CHelpers::GetAsset<UParticleSystem>( &FlashParticle, "ParticleSystem'/Game/Particles_Rifle/Particles/VFX_Muzzleflash.VFX_Muzzleflash'" );
 	CHelpers::GetAsset<UParticleSystem>( &EjectParticle, "ParticleSystem'/Game/Particles_Rifle/Particles/VFX_Eject_bullet.VFX_Eject_bullet'" );
+	CHelpers::GetAsset<UParticleSystem>( &ImpactParticle, "ParticleSystem'/Game/Particles_Rifle/Particles/VFX_Impact_Default.VFX_Impact_Default'" );
 	CHelpers::GetAsset<USoundCue>( &FireSoundCue, "SoundCue'/Game/Rifle_Sounds/S_RifleShoot_Cue.S_RifleShoot_Cue'" );
+	CHelpers::GetClass<ACBullet>( &BulletClass, "Blueprint'/Game/BP_CBullet.BP_CBullet_C'" );
 }
 
 void ACRifle::BeginPlay()
@@ -169,6 +172,11 @@ void ACRifle::Firing()
 		EAttachLocation::KeepRelativeOffset );
 	FVector muzzleLocation = Mesh->GetSocketLocation( "MuzzleFlash" );
 	UGameplayStatics::PlaySoundAtLocation( GetWorld(), FireSoundCue, muzzleLocation );
+	
+	if ( !!BulletClass )
+	{
+		GetWorld()->SpawnActor<ACBullet>( BulletClass, muzzleLocation, direction.Rotation() );
+	}
 
 
 	FCollisionQueryParams params;
@@ -176,6 +184,15 @@ void ACRifle::Firing()
 	params.AddIgnoredActor( OwnerCharacter );
 
 	FHitResult hitResult;
+	if ( GetWorld()->LineTraceSingleByChannel( hitResult, start, end, ECollisionChannel::ECC_Visibility, params ) )
+	{
+		FRotator rotator = hitResult.ImpactNormal.Rotation();
+
+		// 강의에서는 impactPoint 대신 location이었음
+		UGameplayStatics::SpawnEmitterAtLocation( GetWorld(), ImpactParticle, hitResult.ImpactPoint, rotator );
+	}
+
+
 	if ( GetWorld()->LineTraceSingleByChannel( hitResult, start, end, ECollisionChannel::ECC_WorldDynamic, params ) )
 	{
 		AStaticMeshActor* staticMeshActor = Cast<AStaticMeshActor>( hitResult.GetActor() );

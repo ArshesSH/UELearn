@@ -52,4 +52,8 @@ public:
 			outActors.Add( Cast<T>( actor ) );
 		}
 	}
+	template<typename T> static void CreateActorComponent( AActor* inActor, T** inComponent, FName inName )
+	{
+		*inComponent = inActor->CreateDefaultSubobject<T>( inName );
+	}
 };
