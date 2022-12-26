@@ -9,6 +9,7 @@
 #include "Particles/ParticleSystem.h"
 #include "Sound/SoundCue.h"
 #include "CBullet.h"
+#include "Materials/MaterialInstanceConstant.h"
 
 ACRifle::ACRifle()
 {
@@ -28,6 +29,8 @@ ACRifle::ACRifle()
 	CHelpers::GetAsset<UParticleSystem>( &ImpactParticle, "ParticleSystem'/Game/Particles_Rifle/Particles/VFX_Impact_Default.VFX_Impact_Default'" );
 	CHelpers::GetAsset<USoundCue>( &FireSoundCue, "SoundCue'/Game/Rifle_Sounds/S_RifleShoot_Cue.S_RifleShoot_Cue'" );
 	CHelpers::GetClass<ACBullet>( &BulletClass, "Blueprint'/Game/BP_CBullet.BP_CBullet_C'" );
+
+	CHelpers::GetAsset<UMaterialInstanceConstant>( &DecalMaterial, "MaterialInstanceConstant'/Game/Materials/M_Decal_Inst.M_Decal_Inst'" );
 }
 
 void ACRifle::BeginPlay()
@@ -190,6 +193,7 @@ void ACRifle::Firing()
 
 		// 강의에서는 impactPoint 대신 location이었음
 		UGameplayStatics::SpawnEmitterAtLocation( GetWorld(), ImpactParticle, hitResult.ImpactPoint, rotator );
+		UGameplayStatics::SpawnDecalAtLocation( GetWorld(), DecalMaterial, FVector( 5 ), hitResult.ImpactPoint, rotator, 10.0f );
 	}
 
 

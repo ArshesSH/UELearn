@@ -15,6 +15,13 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+public:
+	UFUNCTION()
+		void OnHit( UPrimitiveComponent* HitComponent, AActor* OtherActor,
+			UPrimitiveComponent* OtherComp, FVector NormalImpulse,
+			const FHitResult& Hit );
+
+
 private:
 	UPROPERTY( VisibleDefaultsOnly )
 		class UStaticMeshComponent* Mesh;

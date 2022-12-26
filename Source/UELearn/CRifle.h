@@ -66,6 +66,9 @@ private:
 	UPROPERTY( VisibleDefaultsOnly, Category = "Rifle" )
 		class UParticleSystem* ImpactParticle;
 
+	//22.12.26
+	UPROPERTY( VisibleDefaultsOnly, Category = "Rifle" )
+		class UMaterialInstanceConstant* DecalMaterial;
 
 	class  ACharacter* OwnerCharacter;
 
